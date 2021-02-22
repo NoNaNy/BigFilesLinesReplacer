@@ -14,6 +14,7 @@
 
 import sys
 import os
+from tkinter.constants import DISABLED, NORMAL
 import Grep
 import Sed
 
@@ -64,7 +65,6 @@ def init(top, gui, *args, **kwargs):
     w = gui
     top_level = top
     root = top
-    print()
     w.scrlListBox.bind("<<ListboxSelect>>", ListBox_SelectionChange, add=True)
     root.iconbitmap(f"{os.path.dirname(__file__)}\\editor.ico")
 
@@ -72,7 +72,7 @@ def ValidateLineNumber():
     if(searchOption.get() == "Content"):
         return
 
-    print("validating...")
+    print("Validating...")
     if(valTxtLineNumber.get()<=0 ):
         valLblErrors.set("Número de línea incorrecto.")
     else:
@@ -93,12 +93,12 @@ def SearchRadioButton_Selected():
         ClearValues()
 
     if(optionSelected == "Content"):
-        print("Content")
+        # print("Content")
         w.scrlListBox.configure(state='normal')
         w.txtLineNumber.configure(state='disabled')
         w.txtLineContent.configure(state='normal')
     else:
-        print("LineNumber")
+        # print("LineNumber")
         w.scrlListBox.configure(state='disabled')
         w.txtLineNumber.configure(state='normal')
         w.txtLineContent.configure(state='disabled')
@@ -125,6 +125,7 @@ def SetValuesToReplaceFields(textLine, lineNumber):
 def SearchButton_Click():
     global resultList
     print("Searching...")
+    w.btnSearch.configure(state=DISABLED)
     if(isSetFileName):
         valLblErrors.set('')
         valLblMessages.set('Buscando...')
@@ -135,11 +136,16 @@ def SearchButton_Click():
             resLines=Sed.SedLineNumber(valTxtLineNumber.get(),valFileName.get())
     else: 
         valLblErrors.set("No se ha especificado un archivo...")
+        w.btnSearch.configure(state=NORMAL)
         return
-        
+
+    if(len(resLines)==0):
+        valLblErrors.set('Sin resultados!')
+
     resultList=resLines
     valLstLines.set(resultList)
     valLblMessages.set('')
+    w.btnSearch.configure(state=NORMAL)
 
     if(searchOption.get() == "LineNumber"):
         if(len(resultList)==1):
@@ -147,10 +153,9 @@ def SearchButton_Click():
 
 def ListBox_SelectionChange(selection):
     global resultList
-    print("Current selection...")
 
-    indexList = w.scrlListBox.curselection();        
-    print(indexList)
+    indexList = w.scrlListBox.curselection(); 
+    print(f"SelectionChange... {indexList}")       
 
     if(len(indexList)==0):
         return    
@@ -165,7 +170,8 @@ def ReplaceButton_Click():
     if(not valTxtReplaceLine.get()):
         valLblErrors.set('La línea de reemplazo esta vacía!')
         return
-
+    
+    w.btnReplace.configure(state=DISABLED)
     valLblMessages.set('Reemplazando...')
     root.update()
     Sed.SedReplaceLine(valTxtLineNumber.get(),valTxtReplaceLine.get(), valFileName.get())
@@ -173,7 +179,8 @@ def ReplaceButton_Click():
     if(searchOption.get()=="LineNumber"):
         ClearValues()
     else:
-        valTxtReplaceLine.set(newLineText)
+        valTxtReplaceLine.set('')
+    w.btnReplace.configure(state=NORMAL)
 
 def destroy_window():
     # Function which closes the window.
