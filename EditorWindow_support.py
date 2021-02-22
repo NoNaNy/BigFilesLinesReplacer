@@ -12,7 +12,7 @@
 #    Feb 21, 2021 01:03:57 AM CST  platform: Windows NT
 #    Feb 21, 2021 11:06:48 PM CST  platform: Windows NT
 
-import sys
+import time
 import os
 from tkinter.constants import DISABLED, NORMAL
 import Grep
@@ -130,14 +130,18 @@ def SearchButton_Click():
         valLblErrors.set('')
         valLblMessages.set('Buscando...')
         root.update()
+        swIni=time.perf_counter()
         if(searchOption.get() == "Content"):
             resLines=Grep.GrepByPattern(valTxtLineContent.get(),valFileName.get())
         else:
             resLines=Sed.SedLineNumber(valTxtLineNumber.get(),valFileName.get())
+        swEnd=time.perf_counter()
     else: 
         valLblErrors.set("No se ha especificado un archivo...")
         w.btnSearch.configure(state=NORMAL)
         return
+
+    print(f"Total time: {swEnd-swIni:0.4f} seconds")
 
     if(len(resLines)==0):
         valLblErrors.set('Sin resultados!')
@@ -174,7 +178,10 @@ def ReplaceButton_Click():
     w.btnReplace.configure(state=DISABLED)
     valLblMessages.set('Reemplazando...')
     root.update()
+    swIni=time.perf_counter()
     Sed.SedReplaceLine(valTxtLineNumber.get(),valTxtReplaceLine.get(), valFileName.get())
+    swEnd=time.perf_counter()
+    print(f"Total time: {swEnd-swIni:0.4f} seconds")
     valLblMessages.set('¡Listo!')
     if(searchOption.get()=="LineNumber"):
         ClearValues()
