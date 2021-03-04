@@ -17,3 +17,5 @@ Para la creación de interface gráfica se uso el programa [PAGE](https://source
 Para crear y empaquetar el ejecutable se usó el paquete [pyintaller](https://www.pyinstaller.org/)
 
 `pyinstaller.exe -F -c --add-binary editor.ico;. --add-binary bin\\*;bin -i editor.ico EditorWindow_support.py`
+
+`pyinstaller.exe -F -c -n ReportFilesLinesEditor --add-binary editor.ico;. --add-binary bin\\*;bin -i editor.ico EditorWindow_support.py`
