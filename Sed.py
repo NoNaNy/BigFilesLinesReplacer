@@ -5,7 +5,7 @@ rootPath=os.path.dirname(__file__)
 
 def SedLineNumber(lineNumber, fileName):
     print('--== SED ==--')
-    fullCommand=f"{rootPath}\\bin\\sed -n '{lineNumber},{lineNumber} {{p;{lineNumber}q}}' {fileName}"
+    fullCommand=f"{rootPath}\\bin\\sed -n '{lineNumber}p;{lineNumber}q' {fileName}"
     print(fullCommand)
     result = subprocess.run(fullCommand, stdout=subprocess.PIPE)
     textLine = result.stdout.decode('utf-8')
@@ -17,7 +17,7 @@ def SedLineNumber(lineNumber, fileName):
 def SedReplaceLine(numLine, strLine, fileName):
     #NOTE: For NewFile is necessary change command wiht -i parameter and add new fileName and save buffer in it
     print('--== SED REP ==--')
-    command=f'{numLine}s/.*/{strLine}/; {numLine},{numLine} {{p;{numLine}q}}'
+    command=f'{numLine}s/.*/{strLine}/1'
     print(command)
     fullCommand=f"{rootPath}\\bin\\sed -i '{command}' {fileName}"
     print(fullCommand)
@@ -28,12 +28,10 @@ def SedReplaceLine(numLine, strLine, fileName):
 
 if __name__ == '__main__':
     pass
-    # ret = SedLineNumber(4,'D:/Downloads/demo_sed.txt')    
-    # ret = SedLineNumber(7004515,'D:/Downloads/2020_241_Ordenes_20200828.txt')
-    ret = SedLineNumber(515,'D:/Downloads/2020_241_Ordenes_20200828.txt')
-    # ret = SedLineNumber(5,'D:/Downloads/2020_241_Ordenes_20200828.txt')
-    # dato="--==DATO REEMPLAZADO 3333==--"
-    dato="305;VIRTU USA LLC;0;0;XEXX010101000;0;8;3;0;840;E0150;403;419588;702;601;484;20200827;142510478;20200827;142510478;2203541814965;20200827;142510473;102;103;101;403;1;100;54.37;R;A;1;104;142526529;0;102;ROBERTO ARELLANO DE LA GARZA;20002;2537108;025019;1;309"
-    # SedReplaceLine(515,dato,'D:/Downloads/2020_241_Ordenes_20200828.txt')
-    # SedReplaceLine(21,dato,'D:\\Downloads\\demo_sed.txt')
-    # SedReplaceLine(21,dato,'D:\\Downloads\\demo_sed.txt')
+    fileName="D:/Downloads/2021_49_Ordenes_20210218.txt"
+    lineNumber=145598
+    ret = SedLineNumber(lineNumber,fileName)
+    # dato="305;LUIS;DE LA CRUZ;CARRILLO;NEW_VALUE;CUCL910101HDFRRS05;1;9;15;484;06600;402;AST24903;702;603;484;20210218;110130343;20210218;110130343;2210840075609;20210218;110130000;102;101;103;403;1;69000;4.8000;HOTEL;*;1;104;150001783;0;102;EDSON GABRIEL NAVARRO DE LA ROSA;42305;1556283;025019;16083;307"
+    # SedReplaceLine(lineNumber,dato,fileName)
+    # ret = SedLineNumber(lineNumber,fileName)
+    
